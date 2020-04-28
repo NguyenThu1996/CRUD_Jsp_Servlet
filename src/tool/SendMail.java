@@ -3,7 +3,6 @@ package tool;
 import java.io.IOException;
 import java.util.Properties;
 
-import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -14,38 +13,67 @@ import javax.mail.internet.MimeMessage;
 
 public class SendMail {
 	public static void senMailLogin(String subject, String body) throws IOException {
-		String EMAIL_FROM = "nguyenvanthu.ptp@gmail.com";
-		String PASSWORD = "phuongthao1998";
-		String EMAIL_TO = "nguyenvanthu.itbk@gmail.com";
-
-		Properties prop = new Properties();		
-		prop.setProperty("mail.smtp.auth", "true");
-		prop.setProperty("mail.smtp.starttls.enable", "true");
-		prop.setProperty("mail.smtp.host","smtp.gmail.com"); 
-		prop.setProperty("mail.smtp.port", "587");
-		Authenticator auth = new Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(EMAIL_FROM, PASSWORD);
-			}
-		};
-		Session session = Session.getInstance(prop, auth);
-		try {
-			Message msg = new MimeMessage(session);
-			// from
-			msg.setFrom(new InternetAddress(EMAIL_FROM));
-			// to
-			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(EMAIL_TO));
-			// subject
-			msg.setSubject(subject);
-
-			// content
-			msg.setText(body);
+		 //InputStream configStream = c.getRequest().getServletContext().getResourceAsStream("/WEB-INF/emailconfig.xml");
+		  
+		  String result;
+		  // Recipient's email ID needs to be mentioned.
+		  String to = "nguyenvanthu.itbk@gmail.com";
+		  
+		  // Sender's email ID needs to be mentioned
+		  final String from = "nguyenvanthu.ptp@gmail.com";
 			
+		  final String emailPassword = "phuongthao1998";
 
-			Transport.send(msg);
-		} catch (MessagingException e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage());
+		  // Host of mail server
+		  //String host = "smtp.gmail.com";
+		  String host = "smtp.gmail.com";
+			
+		  // Port of mail server
+		  String port = "587";
+
+		  // Get system properties object
+		  Properties properties = System.getProperties();
+
+		  // Setup mail server
+		  properties.setProperty("mail.smtp.auth", "true");
+		  properties.setProperty("mail.smtp.starttls.enable", "true");
+		  properties.setProperty("mail.smtp.host", host);
+		  properties.setProperty("mail.smtp.port", port);
+
+		  // Get the default Session object.
+		  //Session mailSession = Session.getDefaultInstance(properties);
+			
+		  Session mailSession = Session.getInstance(properties, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() { 
+				return new PasswordAuthentication(from, emailPassword); 
+				} 
+		  });
+
+		  try{
+			// Create a default MimeMessage object.
+			MimeMessage message = new MimeMessage(mailSession);
+			    
+			// Set From: header field of the header.
+			message.setFrom(new InternetAddress(from));
+			    
+			// Set To: header field of the header.
+			message.addRecipient(Message.RecipientType.TO,
+			                               new InternetAddress(to));
+			// Set Subject: header field
+			message.setSubject("thumbswriパスワード通知");
+			
+			// Now set the actual message
+			message.setText("パスワードを発行しました。");
+			
+			// Send message
+			Transport.send(message);
+			result = "Sent message successfully....";
+			System.out.println(result);
+		
+		 }catch (MessagingException mex) {
+			mex.printStackTrace();
+			result = "Error: unable to send message....";
+			System.out.println(mex.getMessage());
 		}
 
 	}
