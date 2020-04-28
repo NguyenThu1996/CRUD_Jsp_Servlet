@@ -41,4 +41,14 @@
 		<servlet-name>EditUser</servlet-name>
 		<url-pattern>/EditUser</url-pattern>
 	</servlet-mapping>
+	<servlet>
+	<description></description>
+		<display-name>FileUploadHandler</display-name>
+		<servlet-name>FileUploadHandler</servlet-name>
+		<servlet-class>nguyenthu.servlet.FileUploadHandler</servlet-class>
+	</servlet>
+	<servlet-mapping>                                                                 
+		<servlet-name>FileUploadHandler</servlet-name>
+		<url-pattern>/FileUploadHandler</url-pattern>
+	</servlet-mapping>
 </web-app>

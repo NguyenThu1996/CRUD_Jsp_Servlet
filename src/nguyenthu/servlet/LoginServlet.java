@@ -76,7 +76,7 @@ public class LoginServlet extends HttpServlet {
 			    SendMail sendMails = new SendMail();
 			    String subject = "MAIL NOTIFICATION";
 			    String body = "you have login";
-			    sendMails.senMailLogin(subject, body);
+			    //sendMails.senMailLogin(subject, body);
 				RequestDispatcher rd = request.getRequestDispatcher("Admin.jsp");
 				rd.forward(request, response);				
 			}
