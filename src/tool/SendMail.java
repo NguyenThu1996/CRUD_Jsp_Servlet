@@ -40,7 +40,7 @@ public class SendMail {
 
 			// content
 			msg.setText(body);
-			msg.saveChanges();
+			
 
 			Transport.send(msg);
 		} catch (MessagingException e) {
