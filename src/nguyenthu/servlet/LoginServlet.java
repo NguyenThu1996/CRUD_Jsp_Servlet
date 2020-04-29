@@ -50,6 +50,7 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		response.setContentType("text/html;charset=UTF-8");
 		Controller c = new Controller();
 		doGet(request, response);
 		String username = request.getParameter("username");
@@ -73,12 +74,14 @@ public class LoginServlet extends HttpServlet {
 				session.setAttribute("Admin", username); // setting session Attr
 				session.setAttribute("pass", password);
 				request.setAttribute("username", username);
-			    SendMail sendMails = new SendMail();
-			    String subject = "MAIL NOTIFICATION";
-			    String body = "you have login";
+				/*
+				 * SendMail sendMails = new SendMail(); String subject = "MAIL NOTIFICATION";
+				 * String body = "you have login";
+				 */
 			    //sendMails.senMailLogin(subject, body);
-				RequestDispatcher rd = request.getRequestDispatcher("Admin.jsp");
-				rd.forward(request, response);				
+				response.sendRedirect("Admin");
+				return;
+				
 			}
 			if (userValidate.equals("Editor_Role")) {
 				System.out.println("Editor_Role");
@@ -86,8 +89,8 @@ public class LoginServlet extends HttpServlet {
 				session.setAttribute("Editor", username);
 				request.setAttribute("username", username);
 				
-				RequestDispatcher rd = request.getRequestDispatcher("Editor.jsp");
-				rd.forward(request, response);
+				response.sendRedirect("Admin");
+				return;
 			}
 			if (userValidate.equals("User_Role")) {
 				System.out.println("User_Role");
@@ -101,13 +104,15 @@ public class LoginServlet extends HttpServlet {
                 request.setAttribute("user",user);				
 				RequestDispatcher rd = request.getRequestDispatcher("User.jsp");
 				rd.forward(request, response);
+				return;
 			} else {
 				System.out.println("Error message = " + userValidate);
 				request.setAttribute("errMessage", userValidate);
 				request.getRequestDispatcher("login.jsp").forward(request, response);
+				return;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 
 	}

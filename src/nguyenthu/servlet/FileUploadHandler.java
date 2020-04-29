@@ -3,6 +3,7 @@ package nguyenthu.servlet;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -46,15 +47,30 @@ public class FileUploadHandler extends HttpServlet {
 		doGet(request, response);
 		if (ServletFileUpload.isMultipartContent(request)) {
 			try {
-				List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory()).parseRequest( new ServletRequestContext(request));
+				List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory())
+						.parseRequest(new ServletRequestContext(request));
 
 				for (FileItem item : multiparts) {
 					if (!item.isFormField()) {
 						String name = new File(item.getName()).getName();
-						item.write(new File(UPLOAD_DIRECTORY + File.separator + name));
+						String type = getFileExtension(name);
+
+						UUID uid = UUID.randomUUID();
+
+						String FilePath = String.format("%s/%s.%s", UPLOAD_DIRECTORY, uid, type);
+
+						item.write(new File(FilePath));
+
+//						Cd = tu tang
+//						FileId (chuổi string auto gen) = uid
+//						FileName = name
+//						Extension = type
+//						Course = ?
+//						Unit = ?
+
+//						=> link =  http://localhost:8080/uploads/uid.type
 					}
 				}
-
 				// File uploaded successfully
 				request.setAttribute("message", "File Uploaded Successfully");
 			} catch (Exception ex) {
@@ -66,6 +82,13 @@ public class FileUploadHandler extends HttpServlet {
 		}
 
 		request.getRequestDispatcher("/result.jsp").forward(request, response);
+	}
+
+	private String getFileExtension(String fileName) {
+		if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
+			return fileName.substring(fileName.lastIndexOf(".") + 1);
+		else
+			return "";
 	}
 
 }
